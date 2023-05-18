@@ -6,7 +6,7 @@ class HomeController extends Controller {
   async index() {
     const { ctx } = this;
     const { id } = ctx.query
-    if (id == undefined) {
+    if (id === undefined) {
       ctx.body = '你没有传入查询参数'
     }
     else {
@@ -14,15 +14,19 @@ class HomeController extends Controller {
     }
     // ctx.body = 'hi, egg';
   }
-  async user() {
-    const { ctx } = this
-    const { id } = ctx.params
-    ctx.body = id
-  }
   async add() {
-    const { ctx } = this
-    const { title } = ctx.request.body
-    ctx.body = {title}
+    const { ctx } = this;
+    const { title } = ctx.request.body;
+    ctx.body = { title };
+  }
+  async user() {
+    const { ctx } = this;
+    const { name, age, slogen } = await ctx.service.home.user();
+    ctx.body = {
+      name,
+      age,
+      slogen
+    }
   }
 }
 
