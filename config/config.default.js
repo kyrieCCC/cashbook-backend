@@ -31,6 +31,22 @@ module.exports = appInfo => {
     domainWhiteList: [ '*' ], // 配置白名单
   };
 
+  // 配置ejs
+  config.view = {
+    mapping: {'.html': 'ejs'}  // 左边写成.html后缀，会自动渲染.html文件
+  };
+
+  // 配置mysql的连接信息
+  exports.mysql = {
+    client: {
+      host: 'localhost',
+      port: '3306',
+      user: 'root',
+      database: 'egg_test',
+    },
+    app: true,
+    agent: false,
+  }
   return {
     ...config,
     ...userConfig,
