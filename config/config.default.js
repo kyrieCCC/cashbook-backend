@@ -22,6 +22,14 @@ module.exports = appInfo => {
   const userConfig = {
     // myAppName: 'egg',
   };
+  //egg的安全措施CSRF
+  config.security = {
+    csrf: {
+      enable: false,
+      ignoreJSON: true
+    },
+    domainWhiteList: [ '*' ], // 配置白名单
+  };
 
   return {
     ...config,
