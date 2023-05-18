@@ -46,7 +46,7 @@ class HomeService extends Service {
     async updateUser(id, name) {
         const { ctx, app } = this
         try {
-            const res = await app.mysql.update('egg_testdata', {name}, {where: id})
+            const res = await app.mysql.update('egg_testdata', {name}, {where: { id }})
             return res
         } catch (error) {
             console.log(error);
