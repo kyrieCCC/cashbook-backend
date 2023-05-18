@@ -31,7 +31,7 @@ class HomeService extends Service {
         const { ctx, app } = this
         try {
             const hasUser = await this.findOneUser(id)
-            if (hasUser.length == 0) {
+            if (hasUser) {
                 const res = await app.mysql.insert('egg_testdata', { name })
                 return res
             } else {
@@ -47,6 +47,16 @@ class HomeService extends Service {
         const { ctx, app } = this
         try {
             const res = await app.mysql.update('egg_testdata', {name}, {where: { id }})
+            return res
+        } catch (error) {
+            console.log(error);
+            return null
+        }
+    }
+    async deleteUser(id) {
+        const { ctx, app } = this
+        try {
+            const res = await app.mysql.delete('egg_testdata', {id})
             return res
         } catch (error) {
             console.log(error);

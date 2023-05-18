@@ -34,7 +34,7 @@ class HomeController extends Controller {
     const { ctx } = this;
     const { id, name } = ctx.request.body
     try {
-      const res = await ctx.service.home.add_user(name)
+      const res = await ctx.service.home.add_user(id, name)
       ctx.body = {
         code: 200,
         msg: 'success',
@@ -53,6 +53,24 @@ class HomeController extends Controller {
     const { id, name } = ctx.request.body
     try {
       const res = await ctx.service.home.updateUser(id, name)
+      ctx.body = {
+        code: 200,
+        msg: 'success',
+        data: null
+      }
+    } catch (error) {
+      ctx.body = {
+        code: 500,
+        msg: 'fail',
+        data: null
+      }
+    }
+  }
+  async deleteUser() {
+    const { ctx } = this;
+    const { id } = ctx.request.body
+    try {
+      const res = await ctx.service.home.deleteUser(id)
       ctx.body = {
         code: 200,
         msg: 'success',
