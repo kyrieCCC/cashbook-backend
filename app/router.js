@@ -9,4 +9,5 @@ module.exports = app => {
   //添加一个路由
   router.post('/add', controller.home.add);
   router.get('/user', controller.home.user)
+  router.post('/addUser', controller.home.addUser);
 };
