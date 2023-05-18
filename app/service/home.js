@@ -32,12 +32,22 @@ class HomeService extends Service {
         try {
             const hasUser = await this.findOneUser(id)
             if (hasUser.length == 0) {
-                const res = await app.mysql.insert('egg_testdata', { id, name })
+                const res = await app.mysql.insert('egg_testdata', { name })
                 return res
             } else {
                 console.log('已经存在该用户！')
                 return null
             } 
+        } catch (error) {
+            console.log(error);
+            return null
+        }
+    }
+    async updateUser(id, name) {
+        const { ctx, app } = this
+        try {
+            const res = await app.mysql.update('egg_testdata', {name}, {where: id})
+            return res
         } catch (error) {
             console.log(error);
             return null

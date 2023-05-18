@@ -10,4 +10,5 @@ module.exports = app => {
   router.post('/add', controller.home.add);
   router.get('/user', controller.home.user)
   router.post('/addUser', controller.home.addUser);
+  router.post('/editUser', controller.home.editUser);
 };
