@@ -91,6 +91,22 @@ class UserController extends Controller {
             }
         }
     }
+    async getUserInfo() {
+        const { ctx, app } = this;
+        const token = ctx.request.header.authorization;
+        const decodeToken = await app.jwt.verify(token, app.config.jwt.secret)
+        const userInfo = await ctx.service.user.getUserByName(decodeToken.username)
+        ctx.body = {
+            code: 200,
+            msg: '解析成功',
+            data: {
+                id: userInfo.id,
+                username: userInfo.username,
+                signature: userInfo.signature || '',
+                avatar: userInfo.avatar || defaultAvatar
+            }
+        }
+    }
 }
 
 module.exports = UserController;
