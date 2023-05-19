@@ -107,6 +107,36 @@ class UserController extends Controller {
             }
         }
     }
+    async editUserInfo() {
+        const { ctx, app } = this;
+        const { signature = '' } = ctx.request.body
+        
+        try {
+            let user_id
+            const token = ctx.request.header.authorization
+            const decodeToken = await app.jwt.verify(token, app.config.jwt.secret)
+            if (!decodeToken) {
+                return
+            }
+            user_id = decodeToken.id
+            const userInfo = await ctx.service.user.getUserByName(decodeToken.username)
+            const res = await ctx.service.user.editUserInfo({
+                ...userInfo,
+                signature
+            });
+            ctx.body = {
+                code: 200,
+                msg: 'success',
+                data: {
+                    id: user_id,
+                    signature,
+                    username: userInfo.username
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = UserController;

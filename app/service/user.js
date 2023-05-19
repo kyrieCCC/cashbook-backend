@@ -25,5 +25,18 @@ class UserService extends Service {
             return null
         }
     }
+    async editUserInfo(params) {
+        const { ctx, app } = this;
+        try {
+            let res = await app.mysql.update('user', {
+                // 此处是传入一个对象，key表示对应的字段名，value表示update的新的值
+                ...params
+            }, { id: params.id }) // 添加where判断条件
+            return res
+        } catch (error) {
+            console.log(error);
+            return null
+        }
+    }
 }
 module.exports = UserService;
