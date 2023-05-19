@@ -35,6 +35,10 @@ module.exports = appInfo => {
   config.view = {
     mapping: {'.html': 'ejs'}  // 左边写成.html后缀，会自动渲染.html文件
   };
+  // jwt配置加密信息
+  config.jwt = {
+    secret: 'Kyrie'
+  };
 
   // 配置mysql的连接信息
   exports.mysql = {
