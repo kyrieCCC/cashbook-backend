@@ -46,6 +46,51 @@ class UserController extends Controller {
         }
       }
     }
+    async login() {
+        const { ctx, app } = this
+        const { username, password } = ctx.request.body
+        const havaUserinfo = await ctx.service.user.getUserByName(username)
+        if (!havaUserinfo || !havaUserinfo.id) {
+            ctx.body = {
+                code: 500,
+                msg: '该用户不存在',
+                data: null
+            }
+            return 
+        }
+        if (havaUserinfo && havaUserinfo.password != password) {
+            ctx.body = {
+                code: 500,
+                msg: '密码错误',
+                data: null
+            }
+            return
+        }
+        const token = app.jwt.sign({
+            id: havaUserinfo.id,
+            username: havaUserinfo.username,
+            exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24hour
+        }, app.config.jwt.secret)
+        ctx.body = {
+            code: 200,
+            msg: '登录成功',
+            data: {
+                token
+            }
+        }
+    }
+    async test_token() {
+        const { ctx, app } = this;
+        const token = ctx.request.header.authorization
+        const decodeToken = await app.jwt.verify(token, app.config.jwt.secret)
+        ctx.body = {
+            code: 200,
+            msg: '解析成功',
+            data: {
+                ...decodeToken
+            }
+        }
+    }
 }
 
 module.exports = UserController;
