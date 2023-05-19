@@ -21,7 +21,22 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    uploadDir: 'app/public/upload'
   };
+
+  // file的文件接收形式
+  config.multipart = {
+    mode: 'file'
+  };
+
+  // 配置egg后端的跨域问题
+  config.cors = {
+    origin: '*', // 允许所有跨域访问
+    credentials: true, // 允许 Cookie 跨域跨域
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+  };
+  
+  
   // egg的安全措施CSRF
   config.security = {
     csrf: {
