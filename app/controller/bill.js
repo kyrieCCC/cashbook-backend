@@ -241,6 +241,77 @@ class BillController extends Controller {
             }
         }
     }
+
+    async data() {
+        const { ctx, app } = this;
+        const { date = '' } = ctx.query
+        
+        let user_id
+            const token = ctx.request.header.authorization;
+            const decode = await app.jwt.verify(token, app.config.jwt.secret);
+            if (!decode) return
+            user_id = decode.id
+        try {
+            const res = await ctx.service.bill.list(user_id)
+            const start = moment(date).startOf('month').unix() * 1000
+            const end = moment(date).endOf('month').unix() * 1000
+            const _data = res.filter(item => (Number(item.date) > start) && (Number(item.date) < end))
+            
+            // 计算总支出
+            const total_expense = _data.reduce((arr, cur) => {
+                if (cur.pay_type == 1) {
+                    arr += Number(cur.amount)
+                }
+                return arr
+            }, 0)
+
+            // 计算总收入
+            const total_income = _data.reduce((arr, cur) => {
+                if (cur.pay_type == 2) {
+                    arr += Number(cur.amount)
+                }
+                return arr
+            }, 0)
+
+            // 计算收支构成
+            let total_data = _data.reduce((arr, cur) => {
+                const index = arr.findIndex(item => item.type_id == cur.type_id)
+                // 查看现在是否在arr中存在相同类型的收支
+                // 如果不存在，就新增一个新的记录
+                // 如果存在相同类型的收支，就将number也就是金额进行累加
+                if (index == -1) {
+                    arr.push({
+                        type_id: cur.type_id,
+                        type_name: cur.type_name,
+                        pay_type: cur.pay_type,
+                        number: Number(cur.amount)
+                    })
+                }
+                if (index > -1) {
+                    arr[index].number += Number(cur.amount)
+                }
+                return arr
+            }, [])
+
+            // 保留两位小数
+            total_data = total_data.map(item => {
+                item.number = Number(Number(item.number).toFixed(2))
+                return item
+            })
+
+            ctx.body = {
+                code: 200,
+                msg: '请求成功了',
+                data: {
+                    total_expense: Number(total_expense).toFixed(2),
+                    total_income: Number(total_income).toFixed(2),
+                    total_data: total_data || []
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 
 module.exports = BillController;

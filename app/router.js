@@ -25,4 +25,5 @@ module.exports = app => {
   router.get('/bill/detail', _jwt, controller.bill.detail);
   router.get('/user/test', _jwt, controller.user.test_token);
   router.get('/user/getUserInfo', _jwt, controller.user.getUserInfo);
+  router.get('/bill/data', _jwt, controller.bill.data); 
 };
