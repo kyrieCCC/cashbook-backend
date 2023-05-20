@@ -13,6 +13,18 @@ class BillService extends Service {
             return null
         }
     }
+    async list(id) {
+        const { ctx, app } = this;
+        const QUERY_STR = 'id, pay_type, amount, date, type_id, type_name, remark'
+        let sql = `select ${QUERY_STR} from bill where user_id = ${id}`
+        try {
+            const res = await app.mysql.query(sql)
+            return res
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
 }
 
 module.exports = BillService;

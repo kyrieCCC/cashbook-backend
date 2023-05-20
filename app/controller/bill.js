@@ -25,6 +25,7 @@ class BillController extends Controller {
                 return
             }
             user_id = decodeToken.id
+            const formatDate = moment(Number())
             const res = await ctx.service.bill.add({
                 amount,
                 type_id,
@@ -61,12 +62,12 @@ class BillController extends Controller {
             }
 
             user_id = decodeToken.id
-
             const list = await ctx.service.bill.list(user_id)
             const _list = list.filter(item => {
                 if (type_id != 'all') {
                     return moment(Number(item.date)).format('YYYY-MM') == date && type_id == item.type_id
                 }
+                console.log(moment(Number(item.date)).format('YYYY-MM'))
                 return moment(Number(item.date)).format('YYYY-MM') == date
             })
             // 格式化数据
