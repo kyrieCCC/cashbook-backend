@@ -19,6 +19,7 @@ module.exports = app => {
   router.post('/user/editUserInfo', _jwt, controller.user.editUserInfo);
   router.post('/test/upload', controller.upload.upload);
   router.post('/bill/add', _jwt, controller.bill.add);
+  router.post('/bill/update', _jwt, controller.bill.update);
   router.get('/bill/list', _jwt, controller.bill.list); // 获取帐单列表
   router.get('/bill/detail', _jwt, controller.bill.detail);
   router.get('/user/test', _jwt, controller.user.test_token);
