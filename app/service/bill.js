@@ -52,6 +52,20 @@ class BillService extends Service {
             return null
         }
     }
+
+    async delete(id, user_id) {
+        const { ctx, app } = this;
+        try {
+            const res = app.mysql.delete('bill', {
+                id: id,
+                user_id: user_id
+            })
+            return res
+        } catch (error) {
+            console.log(error)
+            return null
+        }
+    }
 }
 
 module.exports = BillService;
