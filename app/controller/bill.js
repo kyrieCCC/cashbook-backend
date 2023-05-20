@@ -63,6 +63,7 @@ class BillController extends Controller {
 
             user_id = decodeToken.id
             const list = await ctx.service.bill.list(user_id)
+            console.log(list)
             const _list = list.filter(item => {
                 if (type_id != 'all') {
                     return moment(Number(item.date)).format('YYYY-MM') == date && type_id == item.type_id
@@ -132,6 +133,41 @@ class BillController extends Controller {
             ctx.body = {
                 code: 500,
                 msg: 'fail',
+                data: null
+            }
+        }
+    }
+
+    async detail() {
+        const { ctx, app } = this;
+        const { id = '' } = ctx.query;
+        let user_id
+        const token = ctx.request.header.authorization
+        const decodeToken = await app.jwt.verify(token, app.config.jwt.secret)
+        if (!decodeToken) {
+            return 
+        }
+        user_id = decodeToken.id
+        if (!id) {
+            ctx.body = {
+                code: 500,
+                msg: "订单id不能为空",
+                data: null
+            }
+            return 
+        }
+
+        try {
+            const detail = await ctx.service.bill.detail(id, user_id)
+            ctx.body = {
+                code: 200,
+                msg: '请求成功',
+                data: detail
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 500,
+                msg: '系统错误',
                 data: null
             }
         }
