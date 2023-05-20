@@ -47,6 +47,94 @@ class BillController extends Controller {
             }
         }
     }
+
+    async list() {
+        const { ctx, app } = this;
+        const { date, page = 1, page_size = 5, type_id = 'all' } = ctx.query
+        
+        try {
+            let user_id
+            const token = ctx.request.header.authorization
+            const decodeToken = app.jwt.verify(token, app.config.jwt.secret)
+            if (!decodeToken) {
+                return 
+            }
+
+            user_id = decodeToken.id
+
+            const list = await ctx.service.bill.list(user_id)
+            const _list = list.filter(item => {
+                if (type_id != 'all') {
+                    return moment(Number(item.date)).format('YYYY-MM') == date && type_id == item.type_id
+                }
+                return moment(Number(item.date)).format('YYYY-MM') == date
+            })
+            // 格式化数据
+            let listMap = _list.reduce((cur, item) => {
+                // cur默认是一个空数组
+                // 把第一个账单项的时间格式化为yyyy-mm-dd
+                const date = moment(Number(item.date)).format('YYYY-MM-DD')
+                // 如果在累加的数组当中找到当前项日期date，那么在数组中加入当前项到bill
+                if (cur && cur.length && cur.findIndex(item => item.date == date) > -1) {
+                    const index = cur.findIndex(item => item.date == date)
+                    cur[index].bills.push(item)
+                }
+                // 如果在累加的数组中找不到当前项日期的，那么再新建一项
+                if (cur && cur.length && cur.findIndex(item => item.date == date) == -1) {
+                    cur.push({
+                        date,
+                        bills: [item]
+                    })
+                }
+                if (!cur.length) {
+                    cur.push({
+                        date, 
+                        bills: [item]
+                    })
+                }
+                return cur
+            }, []).sort((a, b) => moment(b.date) - moment(a.date)) // 倒序输出
+            const filterListMap = listMap.slice((page - 1) * page_size, page_size * page)
+
+
+            // 计算当月的总收入和支出
+            // 首先获取当月的账单列表
+            let __list = list.filter(item => moment(Number(item.date)).format('YYYY-MM') == date)
+            // 计算累加支出
+            let totalExpense = __list.reduce((cur, item) => {
+                if (item.pay_type == 1) {
+                    cur += Number(item.amount)
+                    return cur
+                }
+                return cur
+            }, 0)
+            // 计算累计收入
+            let totalIncome = __list.reduce((cur, item) => {
+                if (item.pay_type == 2) {
+                    cur += Number(item.amount)
+                    return cur
+                }
+                return cur
+            }, 0)
+
+            ctx.body = {
+                code: 200,
+                msg: 'success',
+                data: {
+                    totalExpense,
+                    totalIncome,
+                    totalPage: Math.ceil(listMap.length / page_size), // 总分页
+                    list: filterListMap || []
+                }
+            }
+        } catch {
+            ctx.body = {
+                code: 500,
+                msg: 'fail',
+                data: null
+            }
+        }
+    }
 }
 
 module.exports = BillController;
