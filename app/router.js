@@ -34,4 +34,7 @@ module.exports = app => {
   router.get('/bill/list', _jwt, controller.bill.list); // 获取帐单列表
   router.get('/bill/detail', _jwt, controller.bill.detail);
   router.get('/bill/data', _jwt, controller.bill.data); 
+
+  // 消费类型接口
+  router.get('/api/type/list', _jwt, controller.type.list); // 获取消费类型列表
 };
