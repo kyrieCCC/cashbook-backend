@@ -7,7 +7,7 @@ const Controller = require('egg').Controller
 class BillController extends Controller {
     async add() {
         const { ctx, app } = this;
-        const { amount, type_id, type_name, date, pay_type, remark = '' } = ctx.request.body
+        const { amount, type_id, type_name, date, pay_type, remark = '' } = ctx.request.body;
         //判断是否参数为空
         if (!amount || !type_id || !type_name || !date || !pay_type) {
             ctx.body = {
@@ -63,12 +63,10 @@ class BillController extends Controller {
 
             user_id = decodeToken.id
             const list = await ctx.service.bill.list(user_id)
-            console.log(list)
             const _list = list.filter(item => {
                 if (type_id != 'all') {
                     return moment(Number(item.date)).format('YYYY-MM') == date && type_id == item.type_id
                 }
-                console.log(moment(Number(item.date)).format('YYYY-MM'))
                 return moment(Number(item.date)).format('YYYY-MM') == date
             })
             // 格式化数据
