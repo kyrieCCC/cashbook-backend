@@ -15,7 +15,7 @@ class UserService extends Service {
         return null;
       }
     }
-    async register(params) {
+  async register(params) {
         const { ctx } = this;
         try {
             const res = await this.app.mysql.insert('user', params)
@@ -24,7 +24,7 @@ class UserService extends Service {
             console.log(error);
             return null
         }
-    }
+  };
     async editUserInfo(params) {
         const { ctx, app } = this;
         try {
@@ -37,6 +37,21 @@ class UserService extends Service {
             console.log(error);
             return null
         }
+  };
+    
+  async modifyPass(params) {
+    const { ctx, app } = this;
+    try {
+      let res = await app.mysql.update('user', {
+        ...params
+      }, {
+        id: params.id
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+      return null;
     }
+  };
 }
 module.exports = UserService;

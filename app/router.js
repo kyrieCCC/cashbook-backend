@@ -26,6 +26,7 @@ module.exports = app => {
   router.post('/user/register', controller.user.register);
   router.post('/user/login', controller.user.login);
   router.post('/user/editUserInfo', _jwt, controller.user.editUserInfo);
+  router.post('/user/modifypass', _jwt, controller.user.modifyPass);
 
   // 账单接口
   router.post('/bill/add', _jwt, controller.bill.add);

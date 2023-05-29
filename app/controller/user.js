@@ -139,6 +139,53 @@ class UserController extends Controller {
             console.log(error);
         }
     }
+
+    async modifyPass() {
+        const { ctx, app } = this;
+        const { old_pass = '', new_pass = '', new_pass2 = '' } = ctx.request.body;
+
+        try {
+            let user_id
+            const token = ctx.request.header.authorization;
+            const decode = await app.jwt.verify(token, app.config.jwt.secret);
+            if (!decode) {
+                return 
+            }
+            if (decode.username == 'wlc') {
+                ctx.body = {
+                    code: 400,
+                    msg: '这是管理员账户，不允许修改',
+                    data: null
+                }
+                return 
+            }
+
+            if (new_pass != new_pass2) {
+                ctx.body = {
+                    code: 400,
+                    msg: '两次密码不一致!',
+                    data: null
+                }
+                return 
+            }
+
+            const res = await ctx.service.user.modifyPass({
+                ...userInfo,
+                password: new_pass
+            })
+            ctx.body = {
+                code: 200,
+                msg: '请求成功',
+                data: null
+            }
+        } catch (error) {
+            ctx.body = {
+                code: 500,
+                msg: '系统错误',
+                data: null
+              }
+        }
+    }
 }
 
 module.exports = UserController;
