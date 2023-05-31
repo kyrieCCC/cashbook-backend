@@ -58,10 +58,11 @@ module.exports = appInfo => {
   // 配置mysql的连接信息
   exports.mysql = {
     client: {
-      host: 'localhost',
+      host: '106.15.78.110',
       port: '3306',
       user: 'root',
-      database: 'egg_test',
+      database: 'egg_mysql',
+      password: 'Wenlichen667.'
     },
     app: true,
     agent: false,
