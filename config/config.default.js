@@ -55,14 +55,14 @@ module.exports = appInfo => {
     secret: 'Kyrie'
   };
 
-  // 配置mysql的连接信息
+  // 配置mysql的连接信息.
   exports.mysql = {
     client: {
       host: '106.15.78.110',
       port: '3306',
       user: 'root',
       database: 'egg_mysql',
-      password: 'Wenlichen667.'
+      password: 'your password'
     },
     app: true,
     agent: false,
