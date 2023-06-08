@@ -8,6 +8,6 @@ const app = new Application({
   env: 'prod',
 });
 
-app.listen(9000, '0.0.0.0', () => {
+app.listen(7001, '0.0.0.0', () => {
   console.log('Server start on http://0.0.0.0:9000');
 });
