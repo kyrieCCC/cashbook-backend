@@ -27,8 +27,8 @@
     "node": ">=16.0.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-cashbookBackend",
-    "stop": "egg-scripts stop --title=egg-server-cashbookBackend",
+    "start": "egg-scripts start --hostname=0.0.0.0 --port=443 --https.key=cert/api.zhuzhucash.top.key --https.cert=cert/api.zhuzhucash.top.pem --daemon --title=egg-server-jifen",
+    "stop": "egg-scripts stop --title=egg-server-jifen",
     "deploy": "egg-scripts start --port=7001 --hostname=0.0.0.0 --daemon --title=egg-server-cashbookBackend",
     "dev": "egg-bin dev",
     "debug": "egg-bin debug",
